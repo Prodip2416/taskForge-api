@@ -21,6 +21,7 @@ export class UserController {
   public async findAll() {
     return await this.userService.findAll();
   }
+
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   public async createUser(@Body() createUserDTO: CreateUserDTO) {

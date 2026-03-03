@@ -6,12 +6,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import databaseConfig from 'src/config/database.config';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
+import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
+import jwtConfig from './auth/jwt-config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 @Module({
   imports: [
     UserModule,
-     ConfigModule.forRoot({
+    ConfigModule.forRoot({
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
       isGlobal: true,
       load: [databaseConfig],
@@ -31,8 +36,17 @@ const ENV = process.env.NODE_ENV ?? 'development';
       }),
     }),
     AuthModule,
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticationGuard,
+    },
+    AccessTokenGuard,
+  ],
 })
 export class AppModule {}
