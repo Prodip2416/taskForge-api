@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import databaseConfig from 'src/config/database.config';
 
 const ENV = process.env.NODE_ENV ?? 'development';
@@ -29,6 +30,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
         autoLoadEntities: configService.get('database.autoLoadEntities'),
       }),
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

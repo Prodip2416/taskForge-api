@@ -1,8 +1,10 @@
 import { DataSource, In } from 'typeorm';
 import { User } from '../../user/user.entity';
+import { BcryptService } from '../../auth/hashing/provider/bcrypt.service';
 
 export async function seedUsers(dataSource: DataSource): Promise<void> {
   const userRepo = dataSource.getRepository(User);
+  const hashingProvider = new BcryptService();
   const seedUsers: Array<Partial<User>> = [
     {
       firstName: 'Admin',
@@ -48,7 +50,16 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
     return;
   }
 
-  const users = userRepo.create(usersToInsert);
+  const usersWithHashedPassword = await Promise.all(
+    usersToInsert.map(async (user) => ({
+      ...user,
+      password: user.password
+        ? await hashingProvider.hashPassword(user.password)
+        : user.password,
+    })),
+  );
+
+  const users = userRepo.create(usersWithHashedPassword);
   await userRepo.save(users);
   console.log(`User seed complete: created ${users.length} users`);
 }
