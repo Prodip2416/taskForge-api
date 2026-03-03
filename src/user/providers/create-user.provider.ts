@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
   RequestTimeoutException,
 } from '@nestjs/common';
