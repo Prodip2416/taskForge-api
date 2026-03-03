@@ -6,12 +6,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import databaseConfig from 'src/config/database.config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 import jwtConfig from './auth/jwt-config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { PaginationModule } from './common/pagination/pagination.module';
+import { DataResponseInterceptor } from './common/interceptors/data-response/data-response.interceptor';
+import appConfig from './config/app.config';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 @Module({
@@ -20,7 +22,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     ConfigModule.forRoot({
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
       isGlobal: true,
-      load: [databaseConfig],
+      load: [databaseConfig, appConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -49,6 +51,10 @@ const ENV = process.env.NODE_ENV ?? 'development';
       useClass: AuthenticationGuard,
     },
     AccessTokenGuard,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: DataResponseInterceptor,
+    },
   ],
 })
 export class AppModule {}
