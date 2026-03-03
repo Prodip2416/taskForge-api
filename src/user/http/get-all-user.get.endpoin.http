@@ -1,2 +1,3 @@
 GET http://localhost:5001/user
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtaW5AdGFza2ZvcmdlLmNvbSIsImlhdCI6MTc3MjU0MDAxNSwiZXhwIjoxNzcyNTQzNjE1LCJhdWQiOiJsb2NhbGhvc3Q6MzAwMCIsImlzcyI6ImxvY2FsaG9zdCJ9.teUk1dtGCTAM_rYKV6-ijo61WHeMBe45gro34bRO2FA

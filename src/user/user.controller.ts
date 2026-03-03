@@ -2,14 +2,19 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  DefaultValuePipe,
   Get,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
   Post,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UserService } from './providers/user.service';
+import type { ActiveUserData } from '../auth/interfaces/active-user-data.interface';
+import { ActiveUser } from '../auth/decorators/active-user.decorator';
 
 @Controller('user')
 export class UserController {
@@ -18,8 +23,13 @@ export class UserController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(ClassSerializerInterceptor)
-  public async findAll() {
-    return await this.userService.findAll();
+  public async findAll(
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @ActiveUser() activeUser: ActiveUserData,
+  ) {
+    console.log(activeUser);
+    return await this.userService.findAll(limit, page);
   }
 
   @Post('create')

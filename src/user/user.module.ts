@@ -5,7 +5,8 @@ import { User } from './user.entity';
 import { UserService } from './providers/user.service';
 import { CreateUserProvider } from './providers/create-user.provider';
 import { HashingModule } from '../auth/hashing/hashing.module';
-import {  GetOneUserProvider } from './providers/get-user.provider';
+import { GetOneUserProvider } from './providers/get-user.provider';
+import { PaginationService } from 'src/common/pagination/providers/pagination.service';
 
 @Module({
   imports: [HashingModule, TypeOrmModule.forFeature([User])],
@@ -13,7 +14,8 @@ import {  GetOneUserProvider } from './providers/get-user.provider';
   providers: [
     UserService,
     CreateUserProvider,
-    GetOneUserProvider
+    GetOneUserProvider,
+    PaginationService,
   ],
   exports: [UserService],
 })

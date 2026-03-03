@@ -10,8 +10,8 @@ export class UserService {
     private readonly getOneUserProvider: GetOneUserProvider,
   ) {}
 
-  public async findAll() {
-    return await this.getOneUserProvider.findAll();
+  public async findAll(limit: number, page: number) {
+    return await this.getOneUserProvider.findAll(limit, page);
   }
 
   public async createUser(createUserDTO: CreateUserDTO) {

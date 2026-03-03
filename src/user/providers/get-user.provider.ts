@@ -7,16 +7,25 @@ import {
 import { Repository } from 'typeorm';
 import { User } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationService } from 'src/common/pagination/providers/pagination.service';
 
 @Injectable()
 export class GetOneUserProvider {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private paginationService: PaginationService,
   ) {}
 
-  public async findAll() {
-    return await this.userRepository.find();
+  public async findAll(limit: number, page: number) {
+    const qb = this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.firstName', 'user.lastName', 'user.email']);
+
+    return await this.paginationService.paginateQuery(
+      { page: page, limit: limit },
+      qb,
+    );
   }
 
   public async findOneById(id: number) {
