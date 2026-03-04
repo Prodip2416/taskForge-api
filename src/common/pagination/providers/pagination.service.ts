@@ -32,7 +32,6 @@ export class PaginationService {
         .take(limit)
         .getManyAndCount();
     } catch (error: unknown) {
-      // Database-specific error
       if (error instanceof QueryFailedError) {
         throw new InternalServerErrorException(
           'Database query failed while fetching paginated data.',
