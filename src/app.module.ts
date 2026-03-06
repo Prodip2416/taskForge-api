@@ -13,6 +13,7 @@ import jwtConfig from './auth/jwt-config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { PaginationModule } from './common/pagination/pagination.module';
 import { DataResponseInterceptor } from './common/interceptors/data-response/data-response.interceptor';
+import { RoleModule } from './role/role.module';
 import appConfig from './config/app.config';
 
 const ENV = process.env.NODE_ENV ?? 'development';
@@ -42,6 +43,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
     PaginationModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [
