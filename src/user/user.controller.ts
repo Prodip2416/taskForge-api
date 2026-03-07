@@ -15,6 +15,8 @@ import { CreateUserDTO } from './dtos/create-user.dto';
 import { UserService } from './providers/user.service';
 import type { ActiveUserData } from '../auth/interfaces/active-user-data.interface';
 import { ActiveUser } from '../auth/decorators/active-user.decorator';
+import { AuthDecorator } from 'src/auth/decorators/auth.decorator';
+import { AuthType } from 'src/auth/enums/auth-type.enum';
 
 @Controller('user')
 export class UserController {
@@ -34,6 +36,7 @@ export class UserController {
 
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
+  @AuthDecorator(AuthType.None)
   public async createUser(@Body() createUserDTO: CreateUserDTO) {
     return await this.userService.createUser(createUserDTO);
   }

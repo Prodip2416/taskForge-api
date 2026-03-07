@@ -7,9 +7,10 @@ import { CreateUserProvider } from './providers/create-user.provider';
 import { HashingModule } from '../auth/hashing/hashing.module';
 import { GetOneUserProvider } from './providers/get-user.provider';
 import { PaginationService } from 'src/common/pagination/providers/pagination.service';
+import { RoleModule } from '../role/role.module';
 
 @Module({
-  imports: [HashingModule, TypeOrmModule.forFeature([User])],
+  imports: [HashingModule, TypeOrmModule.forFeature([User]), RoleModule],
   controllers: [UserController],
   providers: [
     UserService,

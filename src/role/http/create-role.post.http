@@ -1,0 +1,7 @@
+POST http://localhost:5001/role/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtaW5AdGFza2ZvcmdlLmNvbSIsImlhdCI6MTc3Mjg3NTQ4MiwiZXhwIjoxNzcyODc5MDgyLCJhdWQiOiJsb2NhbGhvc3Q6MzAwMCIsImlzcyI6ImxvY2FsaG9zdCJ9.0gF27KE-alEjv_krYWOmpliOqgCwSjGNj2W1qIN0gzg
+
+{
+  "name":"User"
+}

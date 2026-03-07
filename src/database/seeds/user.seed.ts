@@ -1,11 +1,33 @@
 import { DataSource, In } from 'typeorm';
 import { User } from '../../user/user.entity';
+import { Role } from '../../role/role.entity';
 import { BcryptService } from '../../auth/hashing/provider/bcrypt.service';
+import { RoleEnum } from '../../user/enum/role.enum';
 
 export async function seedUsers(dataSource: DataSource): Promise<void> {
   const userRepo = dataSource.getRepository(User);
+  const roleRepo = dataSource.getRepository(Role);
   const hashingProvider = new BcryptService();
-  const seedUsers: Array<Partial<User>> = [
+
+  // 1. Fetch roles from DB
+  const roles = await roleRepo.find({
+    where: { name: In(Object.values(RoleEnum)) },
+  });
+
+  if (!roles.length) {
+    console.warn('User seed skipped: no roles found, run role seeder first');
+    return;
+  }
+
+  const roleMap = new Map(roles.map((role) => [role.name, role]));
+
+  const getRole = (name: RoleEnum): Role[] => {
+    const role = roleMap.get(name);
+    return role ? [role] : [];
+  };
+
+  // 2. Seed data with roles
+  const seedUserData: Array<Partial<User> & { roles: Role[] }> = [
     {
       firstName: 'Admin',
       lastName: 'User',
@@ -13,6 +35,7 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
       password: 'Tf@123456',
       isActive: true,
       isDelete: false,
+      roles: getRole(RoleEnum.ADMIN),
     },
     {
       firstName: 'Rakib',
@@ -21,6 +44,7 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
       password: 'Tf@123456',
       isActive: true,
       isDelete: false,
+      roles: getRole(RoleEnum.USER),
     },
     {
       firstName: 'Nusrat',
@@ -29,10 +53,12 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
       password: 'Tf@123456',
       isActive: true,
       isDelete: false,
+      roles: getRole(RoleEnum.MODERATOR),
     },
   ];
 
-  const emails = seedUsers
+  // 3. Filter already existing users
+  const emails = seedUserData
     .map((user) => user.email)
     .filter((email): email is string => Boolean(email));
 
@@ -40,8 +66,10 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
     where: { email: In(emails) },
     select: { email: true },
   });
+
   const existingEmailSet = new Set(existingUsers.map((user) => user.email));
-  const usersToInsert = seedUsers.filter(
+
+  const usersToInsert = seedUserData.filter(
     (user) => user.email && !existingEmailSet.has(user.email),
   );
 
@@ -50,6 +78,7 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
     return;
   }
 
+  // 4. Hash passwords
   const usersWithHashedPassword = await Promise.all(
     usersToInsert.map(async (user) => ({
       ...user,
@@ -59,7 +88,15 @@ export async function seedUsers(dataSource: DataSource): Promise<void> {
     })),
   );
 
+  // 5. Save with roles
   const users = userRepo.create(usersWithHashedPassword);
   await userRepo.save(users);
+
+  // 6. Log results
+  users.forEach((user) => {
+    const assignedRoles = user.roles?.map((r) => r.name).join(', ') || 'none';
+    console.log(`✔ Created user: ${user.email} → roles: [${assignedRoles}]`);
+  });
+
   console.log(`User seed complete: created ${users.length} users`);
 }
