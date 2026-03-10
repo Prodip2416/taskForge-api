@@ -25,12 +25,13 @@ export class UserController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(ClassSerializerInterceptor)
+  @AuthDecorator(AuthType.Admin)
   public async findAll(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @ActiveUser() activeUser: ActiveUserData,
   ) {
-    console.log(activeUser);
+    console.log('activeUser', activeUser);
     return await this.userService.findAll(limit, page);
   }
 

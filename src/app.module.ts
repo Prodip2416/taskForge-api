@@ -15,6 +15,7 @@ import { PaginationModule } from './common/pagination/pagination.module';
 import { DataResponseInterceptor } from './common/interceptors/data-response/data-response.interceptor';
 import { RoleModule } from './role/role.module';
 import appConfig from './config/app.config';
+import { AdminUserGuard } from './auth/guards/admin-user/admin-user.guard';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 @Module({
@@ -53,6 +54,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
       useClass: AuthenticationGuard,
     },
     AccessTokenGuard,
+    AdminUserGuard,
     {
       provide: APP_INTERCEPTOR,
       useClass: DataResponseInterceptor,

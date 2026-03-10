@@ -30,12 +30,14 @@ export class GenerateTokensProvider {
   }
 
   public async generateTokens(user: User) {
+    const roleNames = user.roles?.map((role) => role?.name) ?? [];
+    
     const [accessToken, refreshToken] = await Promise.all([
       // Generate Access Token with Email
       this.signToken<Partial<ActiveUserData>>(
         user.id,
         this.jwtConfiguration.accessTokenTtl,
-        { email: user.email },
+        { email: user.email, roles: roleNames },
       ),
 
       // Generate Refresh token without email
