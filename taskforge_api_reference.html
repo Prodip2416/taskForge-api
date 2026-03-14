@@ -1,0 +1,150 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,sans-serif)}
+.wrap{padding:16px 0}
+.phase-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:6px 16px;border-radius:20px;border:1.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.tab.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.module{margin-bottom:24px}
+.module-title{font-size:13px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--color-border-tertiary)}
+.ep{display:grid;grid-template-columns:110px 1fr;align-items:start;gap:10px;padding:10px 0;border-bottom:1px solid var(--color-border-tertiary)}
+.ep:last-child{border-bottom:none}
+.method{font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;text-align:center;letter-spacing:.04em;flex-shrink:0}
+.GET{background:#E1F5EE;color:#085041}
+.POST{background:#E6F1FB;color:#0C447C}
+.PATCH{background:#FAEEDA;color:#633806}
+.DELETE{background:#FCEBEB;color:#791F1F}
+@media(prefers-color-scheme:dark){
+  .GET{background:#085041;color:#9FE1CB}
+  .POST{background:#0C447C;color:#B5D4F4}
+  .PATCH{background:#633806;color:#FAC775}
+  .DELETE{background:#791F1F;color:#F7C1C1}
+}
+.ep-right{}
+.ep-path{font-family:var(--font-mono,monospace);font-size:12.5px;color:var(--color-text-primary);margin-bottom:3px}
+.ep-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.ep-note{display:inline-block;font-size:11px;color:var(--color-text-tertiary);margin-top:3px;background:var(--color-background-secondary);padding:2px 7px;border-radius:4px}
+.phase-label{font-size:12px;color:var(--color-text-tertiary);margin-bottom:16px}
+.hidden{display:none}
+</style>
+<div class="wrap">
+<div class="phase-tabs">
+  <button class="tab active" onclick="show('all')">All</button>
+  <button class="tab" onclick="show('p1')">Phase 1 — Core</button>
+  <button class="tab" onclick="show('p2')">Phase 2 — Collab</button>
+  <button class="tab" onclick="show('p3')">Phase 3 — Power</button>
+</div>
+
+<div id="all-view">
+
+<!-- ───── PHASE 1 ───── -->
+<div class="phase-label">Phase 1 — Core task engine</div>
+
+<div class="module" data-phase="p1">
+  <div class="module-title">Projects</div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/projects</div><div class="ep-desc">নতুন project create করো</div><span class="ep-note">body: name, key, description</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects</div><div class="ep-desc">আমার সব projects list করো (member হিসেবে)</div></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId</div><div class="ep-desc">একটা project এর detail দেখো</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/projects/:projectId</div><div class="ep-desc">Project এর name/description update করো</div><span class="ep-note">admin only</span></div></div>
+  <div class="ep"><span class="method DELETE">DELETE</span><div class="ep-right"><div class="ep-path">/projects/:projectId</div><div class="ep-desc">Project archive / soft delete</div><span class="ep-note">admin only</span></div></div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/projects/:projectId/members</div><div class="ep-desc">Project এ member add করো</div><span class="ep-note">body: userId, role (admin|member)</span></div></div>
+  <div class="ep"><span class="method DELETE">DELETE</span><div class="ep-right"><div class="ep-path">/projects/:projectId/members/:userId</div><div class="ep-desc">Member কে project থেকে remove করো</div></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId/members</div><div class="ep-desc">Project এর সব member দেখো</div></div></div>
+</div>
+
+<div class="module" data-phase="p1">
+  <div class="module-title">Tasks / Issues</div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks</div><div class="ep-desc">নতুন task create করো</div><span class="ep-note">body: title, description, priority, assigneeId, dueDate, sprintId?</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks</div><div class="ep-desc">Project এর সব task list (filter + pagination)</div><span class="ep-note">query: status, assigneeId, priority, sprintId, page, limit</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks/:taskId</div><div class="ep-desc">একটা task এর full detail</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks/:taskId</div><div class="ep-desc">Task update করো (title, desc, priority, dueDate)</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks/:taskId/status</div><div class="ep-desc">Task এর status পরিবর্তন করো</div><span class="ep-note">body: status (todo|in_progress|review|done)</span></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks/:taskId/assign</div><div class="ep-desc">Task কাউকে assign করো বা reassign</div><span class="ep-note">body: assigneeId</span></div></div>
+  <div class="ep"><span class="method DELETE">DELETE</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks/:taskId</div><div class="ep-desc">Task delete করো</div></div></div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks/:taskId/subtasks</div><div class="ep-desc">Sub-task create করো (optional)</div><span class="ep-note">parentId দিয়ে task এর নিচে task</span></div></div>
+</div>
+
+<div class="module" data-phase="p1">
+  <div class="module-title">Sprints</div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/projects/:projectId/sprints</div><div class="ep-desc">নতুন sprint create করো</div><span class="ep-note">body: name, startDate, endDate</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId/sprints</div><div class="ep-desc">Project এর সব sprint list</div></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId/sprints/active</div><div class="ep-desc">Currently active sprint</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/projects/:projectId/sprints/:sprintId</div><div class="ep-desc">Sprint update (name, dates)</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/projects/:projectId/sprints/:sprintId/start</div><div class="ep-desc">Sprint শুরু করো (status: active)</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/projects/:projectId/sprints/:sprintId/complete</div><div class="ep-desc">Sprint শেষ করো (status: completed)</div></div></div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/projects/:projectId/sprints/:sprintId/tasks</div><div class="ep-desc">Backlog থেকে sprint এ task move করো</div><span class="ep-note">body: taskIds[]</span></div></div>
+  <div class="ep"><span class="method DELETE">DELETE</span><div class="ep-right"><div class="ep-path">/projects/:projectId/sprints/:sprintId/tasks/:taskId</div><div class="ep-desc">Sprint থেকে task সরিয়ে backlog এ ফেলো</div></div></div>
+</div>
+
+<!-- ───── PHASE 2 ───── -->
+<div class="phase-label" style="margin-top:8px">Phase 2 — Collaboration</div>
+
+<div class="module" data-phase="p2">
+  <div class="module-title">Comments</div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/comments</div><div class="ep-desc">Task এ comment করো</div><span class="ep-note">body: content, parentId? (reply হলে)</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/comments</div><div class="ep-desc">Task এর সব comment (nested)</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/comments/:commentId</div><div class="ep-desc">নিজের comment edit করো</div></div></div>
+  <div class="ep"><span class="method DELETE">DELETE</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/comments/:commentId</div><div class="ep-desc">Comment delete করো</div><span class="ep-note">owner বা admin</span></div></div>
+</div>
+
+<div class="module" data-phase="p2">
+  <div class="module-title">Attachments</div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/attachments</div><div class="ep-desc">Task এ file attach করো</div><span class="ep-note">multipart/form-data, Multer</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/attachments</div><div class="ep-desc">Task এর সব attachment list</div></div></div>
+  <div class="ep"><span class="method DELETE">DELETE</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/attachments/:attachmentId</div><div class="ep-desc">Attachment delete করো</div></div></div>
+</div>
+
+<div class="module" data-phase="p2">
+  <div class="module-title">Activity log</div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/activity</div><div class="ep-desc">Task এর সব change history</div><span class="ep-note">auto-generated, manual endpoint নেই</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId/activity</div><div class="ep-desc">Project-level সব activity feed</div><span class="ep-note">query: page, limit</span></div></div>
+</div>
+
+<!-- ───── PHASE 3 ───── -->
+<div class="phase-label" style="margin-top:8px">Phase 3 — Power features</div>
+
+<div class="module" data-phase="p3">
+  <div class="module-title">Labels / Tags</div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/projects/:projectId/labels</div><div class="ep-desc">Project এ নতুন label তৈরি করো</div><span class="ep-note">body: name, color (#hex)</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId/labels</div><div class="ep-desc">Project এর সব label</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/projects/:projectId/labels/:labelId</div><div class="ep-desc">Label update (name, color)</div></div></div>
+  <div class="ep"><span class="method DELETE">DELETE</span><div class="ep-right"><div class="ep-path">/projects/:projectId/labels/:labelId</div><div class="ep-desc">Label delete করো</div></div></div>
+  <div class="ep"><span class="method POST">POST</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/labels</div><div class="ep-desc">Task এ label attach করো</div><span class="ep-note">body: labelIds[]</span></div></div>
+  <div class="ep"><span class="method DELETE">DELETE</span><div class="ep-right"><div class="ep-path">/tasks/:taskId/labels/:labelId</div><div class="ep-desc">Task থেকে label সরাও</div></div></div>
+</div>
+
+<div class="module" data-phase="p3">
+  <div class="module-title">Notifications</div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/notifications</div><div class="ep-desc">আমার সব notification (unread first)</div><span class="ep-note">query: isRead, page, limit</span></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/notifications/:notificationId/read</div><div class="ep-desc">একটা notification read mark করো</div></div></div>
+  <div class="ep"><span class="method PATCH">PATCH</span><div class="ep-right"><div class="ep-path">/notifications/read-all</div><div class="ep-desc">সব notification read করো</div></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/notifications/unread-count</div><div class="ep-desc">Unread count (badge এর জন্য)</div></div></div>
+</div>
+
+<div class="module" data-phase="p3">
+  <div class="module-title">Search & Filter</div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/projects/:projectId/tasks/search</div><div class="ep-desc">Task search করো</div><span class="ep-note">query: q (full-text), status, priority, assigneeId, labelId, sprintId, dueBefore, dueAfter</span></div></div>
+  <div class="ep"><span class="method GET">GET</span><div class="ep-right"><div class="ep-path">/search</div><div class="ep-desc">Global search (tasks + projects)</div><span class="ep-note">query: q, type (task|project)</span></div></div>
+</div>
+
+</div>
+</div>
+
+<script>
+function show(phase) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  const modules = document.querySelectorAll('.module');
+  const labels = document.querySelectorAll('.phase-label');
+  if (phase === 'all') {
+    modules.forEach(m => m.style.display = '');
+    labels.forEach(l => l.style.display = '');
+  } else {
+    modules.forEach(m => {
+      m.style.display = m.dataset.phase === phase ? '' : 'none';
+    });
+    labels.forEach(l => l.style.display = 'none');
+  }
+}
+</script>
