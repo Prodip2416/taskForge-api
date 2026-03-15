@@ -16,6 +16,7 @@ import { DataResponseInterceptor } from './common/interceptors/data-response/dat
 import { RoleModule } from './role/role.module';
 import appConfig from './config/app.config';
 import { AdminUserGuard } from './auth/guards/admin-user/admin-user.guard';
+import { ProjectsModule } from './projects/projects.module';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 @Module({
@@ -45,6 +46,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     JwtModule.registerAsync(jwtConfig.asProvider()),
     PaginationModule,
     RoleModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [
