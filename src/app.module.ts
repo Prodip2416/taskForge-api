@@ -17,6 +17,7 @@ import { RoleModule } from './role/role.module';
 import appConfig from './config/app.config';
 import { AdminUserGuard } from './auth/guards/admin-user/admin-user.guard';
 import { ProjectsModule } from './projects/projects.module';
+import { TasksModule } from './tasks/tasks.module';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 @Module({
@@ -47,6 +48,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     PaginationModule,
     RoleModule,
     ProjectsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [
