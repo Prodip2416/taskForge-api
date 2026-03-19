@@ -4,6 +4,7 @@ import { config as dotenvConfig } from 'dotenv';
 import { DataSource } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Role } from '../role/role.entity';
+import { Project } from '../projects/projects.entity';
 
 const env = process.env.NODE_ENV ?? 'development';
 const envFilePath = resolve(process.cwd(), `.env.${env}`);
@@ -21,7 +22,7 @@ export default new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [User, Role],
+  entities: [User, Role, Project],
   migrations: ['src/database/migrations/*.ts'],
   synchronize: false,
 });

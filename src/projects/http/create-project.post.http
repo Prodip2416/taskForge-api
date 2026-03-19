@@ -1,0 +1,9 @@
+POST http://localhost:5001/project/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEwLCJlbWFpbCI6ImFkbWluQHRhc2tmb3JnZS5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3NzM4OTg2MjIsImV4cCI6MTc3MzkwMjIyMiwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3QifQ.39BULACCmVFmf5WnRHF7p2YcfAG3L0Xq7AmSZ2Cyfjw
+
+{
+  "name":"E-Buddy",
+  "slug":"e-buddy",
+  "description":"employee management"
+}
