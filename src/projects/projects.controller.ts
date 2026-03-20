@@ -1,15 +1,40 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ProjectsService } from './providers/projects.service';
 import { CreateProjectDTO } from './dto/project-create.dto';
 
 @Controller('project')
 export class ProjectsController {
-    constructor(
-        private readonly projectService:ProjectsService
-    ){}
+  constructor(private readonly projectService: ProjectsService) {}
 
-    @Post('create')
-    public async create(@Body() createProjectDTO:CreateProjectDTO){
-        return this.projectService.create(createProjectDTO);
-    }
+  @Get('/get-all')
+  @HttpCode(HttpStatus.OK)
+  public async getAll(
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
+    return this.projectService.getAll(page, limit);
+  }
+
+  @Get('/:projectId')
+  @HttpCode(HttpStatus.OK)
+  public async findOne(@Param('projectId', ParseIntPipe) id: number) {
+    return this.projectService.findOne(id);
+  }
+
+  @Post('create')
+  @HttpCode(HttpStatus.CREATED)
+  public async create(@Body() createProjectDTO: CreateProjectDTO) {
+    return this.projectService.create(createProjectDTO);
+  }
 }

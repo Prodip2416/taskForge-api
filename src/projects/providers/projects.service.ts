@@ -1,28 +1,20 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { Project } from '../projects.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common';
 import { CreateProjectDTO } from '../dto/project-create.dto';
+import { ProjectProvider } from './project.provider';
 
 @Injectable()
 export class ProjectsService {
-  constructor(
-    @InjectRepository(Project)
-    private readonly projectRepository: Repository<Project>,
-  ) {}
+  constructor(private readonly projectProvider: ProjectProvider) {}
+
+  public async getAll(page: number, limit: number) {
+    return await this.projectProvider.getAllProjects(page, limit);
+  }
 
   public async create(createProjectDTO: CreateProjectDTO) {
-    const { slug } = createProjectDTO;
-    const isDuplicated = await this.projectRepository.find({
-      where: {
-        slug,
-      },
-    });
-    if(isDuplicated){
-        throw new BadRequestException('Dublicated slug name found!');
-    }
-    let newProject = this.projectRepository.create(createProjectDTO);
-    newProject = await this.projectRepository.save(newProject);
-    return newProject;
+    return await this.projectProvider.createProject(createProjectDTO);
+  }
+
+  public async findOne(projectId: number) {
+    return await this.projectProvider.findOneProjectById(projectId);
   }
 }
