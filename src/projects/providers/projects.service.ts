@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProjectDTO } from '../dto/project-create.dto';
 import { ProjectProvider } from './project.provider';
+import { UpdateProjectDTO } from '../dto/update-project.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -16,5 +17,12 @@ export class ProjectsService {
 
   public async findOne(projectId: number) {
     return await this.projectProvider.findOneProjectById(projectId);
+  }
+
+  public async update(projectId: number, updateProjectDTO: UpdateProjectDTO) {
+    return await this.projectProvider.updateProject(
+      projectId,
+      updateProjectDTO,
+    );
   }
 }

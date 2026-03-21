@@ -10,6 +10,7 @@ import { Project } from '../projects.entity';
 import { Repository } from 'typeorm';
 import { CreateProjectDTO } from '../dto/project-create.dto';
 import { PaginationService } from 'src/common/pagination/providers/pagination.service';
+import { UpdateProjectDTO } from '../dto/update-project.dto';
 
 @Injectable()
 export class ProjectProvider {
@@ -72,6 +73,23 @@ export class ProjectProvider {
       if (error instanceof HttpException) throw error;
 
       throw new InternalServerErrorException('Failed to fetch project');
+    }
+  }
+
+  public async updateProject(id: number, updateProjectDTO: UpdateProjectDTO) {
+    try {
+      const project = await this.projectRepository.findOne({ where: { id } });
+
+      if (!project) {
+        throw new NotFoundException(`Project #${id} not found!`);
+      }
+
+      Object.assign(project, updateProjectDTO);
+
+      return await this.projectRepository.save(project);
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException('Failed to update project');
     }
   }
 }

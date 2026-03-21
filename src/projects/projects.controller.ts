@@ -7,11 +7,13 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { ProjectsService } from './providers/projects.service';
 import { CreateProjectDTO } from './dto/project-create.dto';
+import { UpdateProjectDTO } from './dto/update-project.dto';
 
 @Controller('project')
 export class ProjectsController {
@@ -36,5 +38,13 @@ export class ProjectsController {
   @HttpCode(HttpStatus.CREATED)
   public async create(@Body() createProjectDTO: CreateProjectDTO) {
     return this.projectService.create(createProjectDTO);
+  }
+
+  @Patch('update/:id')
+  public async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProjectDTO: UpdateProjectDTO,
+  ) {
+    return this.projectService.update(id, updateProjectDTO);
   }
 }
