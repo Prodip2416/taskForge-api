@@ -1,9 +1,4 @@
-POST http://localhost:5001/project/create
+DELETE http://localhost:5001/project/delete/5
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEwLCJlbWFpbCI6ImFkbWluQHRhc2tmb3JnZS5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3NzQxOTM1NDcsImV4cCI6MTc3NDE5NzE0NywiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3QifQ.ixPolgCoUXkixwpYC4woAbC3454_8v4voI2VL3C3MPA
 
-{
-  "name":"Merchant Onboarding 006",
-  "slug":"merchant-onboarding-006",
-  "description":"employee management"
-}

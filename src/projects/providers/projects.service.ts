@@ -25,4 +25,8 @@ export class ProjectsService {
       updateProjectDTO,
     );
   }
+  
+  public async delete(projectId: number) {
+    return await this.projectProvider.softDeleteById(projectId);
+  }
 }

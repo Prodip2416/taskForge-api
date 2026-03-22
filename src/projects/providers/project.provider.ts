@@ -30,7 +30,9 @@ export class ProjectProvider {
         'project.description',
         'project.isActive',
         'project.createdAt',
-      ]);
+      ])
+      .where('project.isDelete = :isDelete', { isDelete: false })
+      .andWhere('project.isActive = :isActive', { isActive: true });
 
     return await this.paginationService.paginateQuery(
       { page: page, limit: limit },
@@ -90,6 +92,28 @@ export class ProjectProvider {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException('Failed to update project');
+    }
+  }
+
+  public async softDeleteById(id: number) {
+    try {
+      const project = await this.projectRepository.findOne({
+        where: { id, isDelete: false },
+      });
+
+      if (!project) {
+        throw new NotFoundException(
+          `Project with this id#${id} already deleted!`,
+        );
+      }
+
+      project.isDelete = true;
+      await this.projectRepository.save(project);
+
+      return { message: `Project #${id} deleted successfully` };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException('Failed to delete project');
     }
   }
 }

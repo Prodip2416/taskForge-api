@@ -22,7 +22,7 @@ export class Project {
   @Column({ nullable: false, default: true })
   isActive: boolean;
 
-  @Column({ nullable: false, default: true })
+  @Column({ nullable: false, default: false })
   isDelete: boolean;
 
   @CreateDateColumn()

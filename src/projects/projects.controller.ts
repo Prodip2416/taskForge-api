@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -41,10 +42,17 @@ export class ProjectsController {
   }
 
   @Patch('update/:id')
+  @HttpCode(HttpStatus.OK)
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProjectDTO: UpdateProjectDTO,
   ) {
     return this.projectService.update(id, updateProjectDTO);
+  }
+
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.OK)
+  public async remove(@Param('id', ParseIntPipe) id: number) {
+    return this.projectService.delete(id);
   }
 }
