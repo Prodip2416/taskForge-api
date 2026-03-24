@@ -25,7 +25,11 @@ export class ProjectsService {
       updateProjectDTO,
     );
   }
-  
+
+  public async activeStatusChnage(projectId: number) {
+    return await this.projectProvider.activeStatusChangeById(projectId);
+  }
+
   public async delete(projectId: number) {
     return await this.projectProvider.softDeleteById(projectId);
   }

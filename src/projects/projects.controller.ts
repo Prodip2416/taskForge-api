@@ -50,6 +50,12 @@ export class ProjectsController {
     return this.projectService.update(id, updateProjectDTO);
   }
 
+  @Delete('change-active-status/:id')
+  @HttpCode(HttpStatus.OK)
+  public async changeActiveStatus(@Param('id', ParseIntPipe) id: number) {
+    return this.projectService.activeStatusChnage(id);
+  }
+
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   public async remove(@Param('id', ParseIntPipe) id: number) {

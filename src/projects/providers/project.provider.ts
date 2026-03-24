@@ -95,6 +95,27 @@ export class ProjectProvider {
     }
   }
 
+  public async activeStatusChangeById(id: number) {
+    try {
+      const project = await this.projectRepository.findOne({
+        where: { id },
+      });
+
+      if (!project) {
+        throw new NotFoundException(`Project with id#${id} not found!`);
+      }
+
+      project.isActive = !project.isActive; 
+      await this.projectRepository.save(project);
+
+      return {
+        message: `Project #${id} is now ${project.isActive ? 'Active' : 'Inactive'}`,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException('Failed to update project status');
+    }
+  }
   public async softDeleteById(id: number) {
     try {
       const project = await this.projectRepository.findOne({
