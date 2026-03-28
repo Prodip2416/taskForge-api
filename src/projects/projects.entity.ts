@@ -1,7 +1,10 @@
+import { User } from '../user/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -27,4 +30,8 @@ export class Project {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @ManyToMany(() => User, (member) => member.projects)
+  @JoinTable() 
+  members: User[];
 }
