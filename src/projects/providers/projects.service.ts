@@ -33,6 +33,7 @@ export class ProjectsService {
   public async delete(projectId: number) {
     return await this.projectProvider.softDeleteById(projectId);
   }
+  
   public async assignMembers(projectId: number) {
     return await this.projectProvider.softDeleteById(projectId);
   }
